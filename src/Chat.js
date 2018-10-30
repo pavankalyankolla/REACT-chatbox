@@ -13,16 +13,6 @@ class Chat extends React.Component{
 
         this.socket = io('localhost:8080');
 
-        this.sendMessage = ev => {
-            ev.preventDefault();
-            this.socket.emit('SEND_MESSAGE', {
-                author: this.state.username,
-                message: this.state.message
-            })
-            this.setState({message: ''});
-
-        }
-        
         this.socket.on('RECEIVE_MESSAGE', function(data){
             addMessage(data);
         });
@@ -32,6 +22,16 @@ class Chat extends React.Component{
             this.setState({messages: [...this.state.messages, data]});
             console.log(this.state.messages);
         };
+
+        this.sendMessage = ev => {
+            ev.preventDefault();
+            this.socket.emit('SEND_MESSAGE', {
+                author: this.state.username,
+                message: this.state.message
+            })
+            this.setState({message: ''});
+
+        }
     }
     render(){
         return (
@@ -43,9 +43,9 @@ class Chat extends React.Component{
                                 <div className="card-title">Global Chat</div>
                                 <hr/>
                                 <div className="messages">
-                                    {this.state.messages.map(message => {
+                                    {this.state.messages.map((message,index) => {
                                         return (
-                                            <div>{message.author}: {message.message}</div>
+                                            <div  key = {index}>{message.author}: {message.message}</div>
                                         )
                                     })}
                                 </div>
